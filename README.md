@@ -45,6 +45,7 @@ Runs fully locally using Ollama:
 Configured via environment variables:
 
 LLM_PROVIDER=ollama
+
 EMBEDDINGS_PROVIDER=ollama
 
 
@@ -53,6 +54,7 @@ EMBEDDINGS_PROVIDER=ollama
 The architecture supports OpenAI as a drop-in replacement:
 
 LLM_PROVIDER=openai
+
 EMBEDDINGS_PROVIDER=openai
 
 
