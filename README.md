@@ -96,8 +96,41 @@ This project is designed to demonstrate:
 
 ---
 
+## Observability & Incident Tracking
+
+This service includes built-in observability to surface operational issues in the AI workflow.
+
+When critical steps fail (e.g., embedding generation, LLM calls, or provider outages), incidents are automatically recorded to a local SQLite database for inspection and debugging.
+
+### Incident Logging
+- Failures in the QA pipeline (retrieval, embeddings, or answer generation) are logged as incidents
+- Each incident records:
+  - component (e.g., `qa_pipeline`)
+  - severity (`warning`, `error`, `critical`)
+  - error message
+  - timestamp
+
+### Health Checks
+The service exposes a unified health endpoint to monitor subsystem status:
+
+- `GET /health`
+  - Checks database availability
+  - Verifies Chroma vector store accessibility
+  - Confirms Ollama service availability
+  - Returns overall system status: `ok`, `degraded`, or `down`
+
+### Incident API
+- `GET /incidents`
+  - Returns recent operational incidents
+  - Useful for debugging, audits, and postmortems
+
+This design demonstrates how AI systems can be made **observable, supportable, and production-ready**, rather than treated as opaque black boxes.
+
+---
 ## Status
 
 - Day 1: Backend & DB setup ✅
 - Day 2: Ingestion & retrieval pipeline ✅
 - Day 3: Answer generation with citations ✅
+- Day 4: Production observability added, including automatic incident logging and health checks across DB, vector store, and LLM provider ✅
+
