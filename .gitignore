@@ -1,1 +1,23 @@
+# Secrets
 backend/.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+
+# Local databases & artifacts
+backend/app.db
+backend/*.db
+
+# Vector store / generated data
+backend/data/processed/
+backend/data/processed/**
+
+# OS junk
+.DS_Store
+
