@@ -1,39 +1,42 @@
-# Secrets
-backend/.env
-
-# Python
+# =========================
+# Python / Backend
+# =========================
+backend/.venv/
+.venv/
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 
-# Virtual environments
-.venv/
+# =========================
+# Local data & vector stores (DO NOT COMMIT)
+# =========================
+backend/data/
+backend/data/**
+data/
+data/**
 
-# Local databases & artifacts
-backend/app.db
-backend/*.db
+# Chroma / vector DB artifacts
+**/chroma/
+**/*.sqlite3
+**/*.db
 
-# Vector store / generated data
-backend/data/processed/
-backend/data/processed/**
-
-# OS junk
-.DS_Store
-
-# --- Local vector DB / derived data ---
-backend/data/processed/
-backend/data/uploads/
-backend/data/**/*.sqlite3
-
-# --- Python ---
-__pycache__/
-*.pyc
-.venv/
-
-# --- Node ---
+# =========================
+# Node / Frontend
+# =========================
 node_modules/
+.next/
+out/
+dist/
 
-# --- OS ---
+# =========================
+# Logs
+# =========================
+*.log
+
+# =========================
+# OS / Editor
+# =========================
 .DS_Store
-
+.vscode/
+.idea/
