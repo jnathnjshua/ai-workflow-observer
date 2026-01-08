@@ -16,14 +16,19 @@ frontend_origin = os.getenv("FRONTEND_ORIGIN")
 allow_origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "https://ai-workflow-observer.vercel.app",
 ]
 if frontend_origin:
     allow_origins.append(frontend_origin)
+allow_origins = list(dict.fromkeys(allow_origins))
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allow_origins,
-    allow_origin_regex=r"http://localhost:\d+|http://127\.0\.0\.1:\d+",
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "https://ai-workflow-observer.vercel.app",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
