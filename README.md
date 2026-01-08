@@ -6,6 +6,28 @@ This project demonstrates how to ingest, embed, retrieve, and answer questions o
 
 ---
 
+## Live Demo (Frontend) + Local Backend Setup
+
+Live site: <PASTE_VERCEL_URL_HERE>
+
+Quick start (local backend + hosted frontend):
+1) Install Ollama.
+2) Pull required models:
+   - `nomic-embed-text`
+   - `llama3.1:8b`
+3) Run the backend locally:
+   - `cd backend`
+   - `source .venv/bin/activate`
+   - `uvicorn app.main:app --reload --port 8000`
+4) Open the hosted site and set the API base URL to:
+   - `http://localhost:8000`
+5) Test connectivity:
+   - Use the Health page in the UI or run a sample Ask query.
+
+Note: The hosted site calls your local backend. Ensure the backend is running and reachable on localhost.
+
+---
+
 ## What This Project Does
 
 - Ingests raw financial documents (earnings reports, 10-Qs, financial notes)
@@ -149,6 +171,15 @@ The frontend is intentionally styled to resemble internal research or platform t
 
 ---
 
+## Deploy Frontend to Vercel (Free)
+
+1) Import the GitHub repo into Vercel.
+2) Set the root directory to `/frontend` if prompted.
+3) Use default build/output settings.
+4) Optional env var: `NEXT_PUBLIC_API_BASE` (not required because the API base can be set in the UI).
+
+---
+
 ## Why This Exists
 
 This project is designed to demonstrate:
@@ -163,10 +194,8 @@ This project is designed to demonstrate:
 
 ## Status
 
-- **Day 1:** Backend & DB setup ✅  
-- **Day 2:** Ingestion & retrieval pipeline ✅  
-- **Day 3:** Answer generation with strict citations ✅  
-- **Day 4:** Production observability (incidents + health checks) ✅  
-- **Day 5:** Real PDF ingestion + Next.js frontend UI/UX ✅  
-
----
+- **Day 1:** Backend & DB setup ✅
+- **Day 2:** Ingestion & retrieval pipeline ✅
+- **Day 3:** Answer generation with strict citations ✅
+- **Day 4:** Production observability (incidents + health checks) ✅
+- **Day 5:** Real PDF ingestion + Next.js frontend UI/UX ✅

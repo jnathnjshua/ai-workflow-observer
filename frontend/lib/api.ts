@@ -1,4 +1,4 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
+import { getApiBaseUrl } from "./apiBase";
 
 export async function uploadPdf(file: File, onProgress?: (pct: number) => void) {
   return new Promise((resolve, reject) => {
@@ -6,7 +6,8 @@ export async function uploadPdf(file: File, onProgress?: (pct: number) => void) 
     fd.append("file", file);
 
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", `${API_BASE}/ingest_pdf`);
+    const base = getApiBaseUrl();
+    xhr.open("POST", `${base}/ingest_pdf`);
 
     xhr.upload.onprogress = (event) => {
       if (!onProgress) return;
@@ -39,19 +40,22 @@ export async function uploadPdf(file: File, onProgress?: (pct: number) => void) 
 
 export async function ask(question: string, top_k = 8) {
   const params = new URLSearchParams({ question, top_k: String(top_k) });
-  const res = await fetch(`${API_BASE}/ask?${params.toString()}`, { method: "POST" });
+  const base = getApiBaseUrl();
+  const res = await fetch(`${base}/ask?${params.toString()}`, { method: "POST" });
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
 
 export async function getIncidents(limit = 25) {
-  const res = await fetch(`${API_BASE}/incidents?limit=${limit}`);
+  const base = getApiBaseUrl();
+  const res = await fetch(`${base}/incidents?limit=${limit}`);
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
 
 export async function getHealth() {
-  const res = await fetch(`${API_BASE}/health`);
+  const base = getApiBaseUrl();
+  const res = await fetch(`${base}/health`);
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }

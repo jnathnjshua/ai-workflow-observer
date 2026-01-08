@@ -12,12 +12,17 @@ from .ingestion import ingest_raw_docs, ingest_text_blob
 from .models import Ping
 
 app = FastAPI(title="AI Workflow Observer API")
+frontend_origin = os.getenv("FRONTEND_ORIGIN")
+allow_origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
+if frontend_origin:
+    allow_origins.append(frontend_origin)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-    ],
+    allow_origins=allow_origins,
     allow_origin_regex=r"http://localhost:\d+|http://127\.0\.0\.1:\d+",
     allow_credentials=True,
     allow_methods=["*"],
