@@ -21,3 +21,19 @@ backend/data/processed/**
 # OS junk
 .DS_Store
 
+# --- Local vector DB / derived data ---
+backend/data/processed/
+backend/data/uploads/
+backend/data/**/*.sqlite3
+
+# --- Python ---
+__pycache__/
+*.pyc
+.venv/
+
+# --- Node ---
+node_modules/
+
+# --- OS ---
+.DS_Store
+
