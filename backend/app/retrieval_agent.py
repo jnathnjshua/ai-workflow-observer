@@ -18,10 +18,13 @@ def retrieve_chunks(query: str, top_k: int = 3) -> List[Dict]:
     db = chromadb.PersistentClient(path=CHROMA_PATH)
     collection = db.get_collection(name=COLLECTION_NAME)
 
-    with traced_step("retrieval.query_store", {"top_k": top_k}):
+    total = collection.count()
+    n_results = min(total, max(top_k * 3, top_k))
+
+    with traced_step("retrieval.query_store", {"top_k": top_k, "n_results": n_results}):
         results = collection.query(
             query_embeddings=[query_embedding],
-            n_results=top_k
+            n_results=n_results
         )
 
     chunks = []
@@ -32,5 +35,15 @@ def retrieve_chunks(query: str, top_k: int = 3) -> List[Dict]:
             "id": results["ids"][0][i]
         })
 
-    return chunks
+    # DEDUPE: avoid returning the same chunk multiple times
+    seen = set()
+    deduped = []
+    for c in chunks:
+        meta = c.get("metadata") or {}
+        key = (meta.get("source_file"), meta.get("chunk_index"))
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(c)
 
+    return deduped[:top_k]

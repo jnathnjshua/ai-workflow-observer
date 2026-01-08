@@ -10,15 +10,17 @@ CHROMA_PATH = "data/processed/chroma"
 COLLECTION_NAME = "financial_docs"
 
 
-def chunk_text(text: str, chunk_size: int = 800, overlap: int = 150):
+def chunk_text(text: str, chunk_size: int = 1200, overlap: int = 150):
+    text = " ".join(text.split())
+    if not text:
+        return []
     chunks = []
     i = 0
     while i < len(text):
-        chunk = text[i:i + chunk_size]
+        chunk = text[i:i+chunk_size]
         chunks.append(chunk)
         i += chunk_size - overlap
     return chunks
-
 
 def ingest_raw_docs(raw_docs_dir: str = "data/raw_docs"):
     os.makedirs(CHROMA_PATH, exist_ok=True)
@@ -79,3 +81,41 @@ def ingest_raw_docs(raw_docs_dir: str = "data/raw_docs"):
         "total_chunks": total_chunks
     }
 
+def ingest_text_blob(text: str, source_file: str = "uploaded.pdf"):
+    """
+    Takes a big string (PDF extracted text), chunks it, embeds it using the configured provider,
+    and stores in Chroma.
+    """
+    os.makedirs(CHROMA_PATH, exist_ok=True)
+
+    db = chromadb.PersistentClient(path=CHROMA_PATH)
+    collection = db.get_or_create_collection(name=COLLECTION_NAME)
+
+    chunks = chunk_text(text)
+    if not chunks:
+        return {"files_ingested": 0, "total_chunks": 0}
+
+    ids = []
+    embeddings = []
+    metadatas = []
+    documents = []
+
+    for idx, chunk in enumerate(chunks):
+        vector = embed_text(chunk)  # <-- uses your existing provider abstraction
+
+        ids.append(str(uuid.uuid4()))
+        embeddings.append(vector)
+        metadatas.append({
+            "source_file": source_file,
+            "chunk_index": idx
+        })
+        documents.append(chunk)
+
+    collection.add(
+        ids=ids,
+        embeddings=embeddings,
+        metadatas=metadatas,
+        documents=documents
+    )
+
+    return {"files_ingested": 1, "total_chunks": len(chunks)}

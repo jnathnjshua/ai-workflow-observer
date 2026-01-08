@@ -1,0 +1,163 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fbfaf7;
+  --foreground: #1f1f1f;
+  --bg: #fbfaf7;
+  --card: #ffffff;
+  --border: rgba(0, 0, 0, 0.08);
+  --text: #1f1f1f;
+  --muted: rgba(0, 0, 0, 0.55);
+  --grid-uniform: rgba(0, 0, 0, 0.03);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--grid-uniform) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-uniform) 1px, transparent 1px);
+  background-size: 28px 28px, 28px 28px;
+  background-position: -1px -1px, -1px -1px;
+  color: var(--text);
+  font-family: "Avenir Next", "Avenir", "Noto Sans", "Helvetica Neue", sans-serif;
+}
+
+aside nav a::before,
+aside nav a::after {
+  content: none !important;
+}
+
+.upload-status {
+  display: inline-flex;
+  height: 20px;
+  width: 20px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1.5px solid rgba(0, 0, 0, 0.25);
+  background: #ffffff;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+  position: relative;
+  transition: border-color 200ms ease, background-color 200ms ease;
+}
+
+.upload-status--pending {
+  background: transparent;
+  color: transparent;
+}
+
+.upload-status--done {
+  border-color: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.upload-status::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 999px;
+  background: conic-gradient(
+    rgba(0, 0, 0, 0.35) var(--progress, 0%),
+    transparent 0
+  );
+  -webkit-mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 2px),
+    #000 calc(100% - 2px)
+  );
+  mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 2px),
+    #000 calc(100% - 2px)
+  );
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.upload-status--uploading::before {
+  opacity: 1;
+}
+
+.upload-status::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 4px;
+  border-left: 2px solid rgba(0, 0, 0, 0.6);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.6);
+  transform: rotate(-45deg) scale(0.3);
+  opacity: 0;
+  transition: transform 220ms ease, opacity 220ms ease;
+}
+
+.upload-status--done::after {
+  transform: rotate(-45deg) scale(1);
+  opacity: 1;
+}
+
+.upload-status--error {
+  border-color: rgba(239, 68, 68, 0.5);
+  color: rgba(239, 68, 68, 0.8);
+}
+
+.upload-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 12px;
+  min-width: 64px;
+}
+
+.upload-dots__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.5);
+  animation: upload-dot 1.2s infinite ease-in-out;
+}
+
+.upload-dots__label {
+  font-size: 11px;
+  color: rgba(0, 0, 0, 0.5);
+  margin-right: 4px;
+  animation: none;
+  width: auto;
+  height: auto;
+  background: none;
+}
+
+.upload-dots__dot:nth-child(2) {
+  animation-delay: 0s;
+}
+
+.upload-dots__dot:nth-child(3) {
+  animation-delay: 0.15s;
+}
+
+.upload-dots__dot:nth-child(4) {
+  animation-delay: 0.3s;
+}
+
+.upload-dots__dot:nth-child(5) {
+  animation-delay: 0.45s;
+}
+
+@keyframes upload-dot {
+  0%,
+  100% {
+    transform: translateX(0);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translateX(6px);
+    opacity: 0.8;
+  }
+}
