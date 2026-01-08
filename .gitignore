@@ -44,3 +44,9 @@ dist/
 .DS_Store
 .vscode/
 .idea/
+
+backend/app.db
+backend/*.db
+.env
+backend/.env
+frontend/.env.local
