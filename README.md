@@ -8,8 +8,7 @@ This project demonstrates how to ingest, embed, retrieve, and answer questions o
 
 ## Live Demo (Frontend) + Local Backend Setup
 
-Live site: <PASTE_VERCEL_URL_HERE>
-TODO: Replace the placeholder above with your Vercel URL after deployment.
+Live site: https://ai-workflow-observer.vercel.app
 
 Quick start (local backend + hosted frontend):
 1) Install Ollama.
