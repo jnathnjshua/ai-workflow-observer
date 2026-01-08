@@ -2,42 +2,47 @@
 
 A lightweight, end-to-end AI document analysis pipeline inspired by modern financial research workflows.
 
-This project demonstrates how to ingest, embed, retrieve, and answer questions over structured financial documents with full citation transparency.
+This project demonstrates how to ingest, embed, retrieve, and answer questions over structured financial documents with full citation transparency, observability, and a modern UI.
 
 ---
 
 ## What This Project Does
 
-- Ingests raw financial documents (earnings reports, 10-Q excerpts, notes)
-- Chunks and embeds documents into a vector store
+- Ingests raw financial documents (earnings reports, 10-Qs, financial notes)
+- Parses and chunks PDFs into structured text segments
+- Embeds documents into a vector store
 - Retrieves the most relevant document passages for a given question
 - Generates answers **only from retrieved sources**
 - Returns citations alongside answers for traceability
+- Surfaces system health and operational failures
 
-This mirrors how institutional research platforms analyze and audit financial information.
+This mirrors how institutional research platforms analyze, audit, and operationalize financial information.
 
 ---
 
 ## Architecture Overview
 
-Raw Docs → Embeddings → Vector Store → Retrieval → Answer Generation
+**Raw Docs → Embeddings → Vector Store → Retrieval → Answer Generation → UI**
 
+### Core Components
 
-Key components:
-- FastAPI backend
-- ChromaDB for vector storage
-- Ollama for local LLM + embeddings
+- **FastAPI backend**
+- **ChromaDB** for vector storage
+- **Ollama** for local LLM + embeddings
+- **SQLite** for incident logging
+- **Next.js (App Router)** frontend
 - Provider abstraction for vendor flexibility
 
 ---
 
 ## Providers (Cost Control & Vendor Resilience)
 
-This project supports **pluggable providers** for both embeddings and LLM generation.
+This project supports pluggable providers for both embeddings and LLM generation.
 
 ### Default: Ollama (Local, No Cost)
 
 Runs fully locally using Ollama:
+
 - No per-request cost
 - Ideal for development, demos, and cost control
 - Works on Apple Silicon
@@ -59,40 +64,39 @@ EMBEDDINGS_PROVIDER=openai
 
 
 This allows:
+
 - Vendor redundancy
 - Cost-aware switching
 - Graceful fallback during outages
 
-Execution in this repository uses **Ollama only**.
+> Execution in this repository currently uses Ollama only.
 
 ---
 
 ## API Endpoints
 
-### POST /ingest
-
-Ingests and embeds raw documents.
-
-### POST /retrieve
-
-Retrieves top-K relevant document chunks for a query.
+### POST /ingest_pdf
+Uploads and ingests a financial PDF (e.g., 10-Q or earnings report):
+- Extracts text
+- Chunks content
+- Embeds locally
+- Stores in ChromaDB with source metadata
 
 ### POST /ask
-
 End-to-end QA pipeline:
-- Retrieves relevant sources
-- Generates an answer from those sources only
-- Returns citations and supporting documents
+- Retrieves top-K relevant chunks
+- Generates an answer **only from retrieved sources**
+- Returns citations and supporting source excerpts
 
----
+### GET /health
+Unified health check:
+- Database availability
+- Chroma vector store accessibility
+- Ollama service status
+- Returns overall system status: `ok`, `degraded`, or `down`
 
-## Why This Exists
-
-This project is designed to demonstrate:
-- Production-oriented AI pipelines
-- Observability and traceability in AI systems
-- Cost control and vendor resilience
-- Clear separation of concerns (ingest, retrieve, answer)
+### GET /incidents
+Returns recent operational incidents for inspection and debugging.
 
 ---
 
@@ -100,37 +104,69 @@ This project is designed to demonstrate:
 
 This service includes built-in observability to surface operational issues in the AI workflow.
 
-When critical steps fail (e.g., embedding generation, LLM calls, or provider outages), incidents are automatically recorded to a local SQLite database for inspection and debugging.
+When critical steps fail (e.g., embedding generation, retrieval, or LLM calls), incidents are automatically recorded to a local SQLite database.
 
 ### Incident Logging
-- Failures in the QA pipeline (retrieval, embeddings, or answer generation) are logged as incidents
-- Each incident records:
-  - component (e.g., `qa_pipeline`)
-  - severity (`warning`, `error`, `critical`)
-  - error message
-  - timestamp
 
-### Health Checks
-The service exposes a unified health endpoint to monitor subsystem status:
+Failures in the QA pipeline are logged with:
+- Component (e.g., `qa_pipeline`)
+- Severity (`warning`, `error`, `critical`)
+- Error message
+- Timestamp
 
-- `GET /health`
-  - Checks database availability
-  - Verifies Chroma vector store accessibility
-  - Confirms Ollama service availability
-  - Returns overall system status: `ok`, `degraded`, or `down`
+### Why This Matters
 
-### Incident API
-- `GET /incidents`
-  - Returns recent operational incidents
-  - Useful for debugging, audits, and postmortems
+This design demonstrates how AI systems can be made:
+- Observable
+- Supportable
+- Auditable
+- Production-ready
 
-This design demonstrates how AI systems can be made **observable, supportable, and production-ready**, rather than treated as opaque black boxes.
+Rather than opaque black boxes.
 
 ---
+
+## Frontend (Next.js)
+
+The frontend is built with **Next.js (App Router)** and serves as the primary interface for interacting with the AI workflow.
+
+### Core Views
+
+- **Upload** — Upload and ingest financial PDFs
+- **Ask** — Query ingested documents with cited answers
+- **Incidents** — View logged failures and errors
+- **Health** — Inspect system and dependency status
+
+### Design Principles
+
+- Minimalist, linear, dashboard-style UI
+- Neutral grayscale palette
+- Subtle borders and cards
+- Small, readable typography
+- No distracting colors or visual noise
+
+The frontend is intentionally styled to resemble internal research or platform tooling rather than a consumer application.
+
+---
+
+## Why This Exists
+
+This project is designed to demonstrate:
+
+- Production-oriented AI pipelines
+- Source-grounded and auditable RAG systems
+- Cost control and vendor resilience
+- Observability as a first-class concern
+- Full-stack ownership (backend, frontend, and operations)
+
+---
+
 ## Status
 
-- Day 1: Backend & DB setup ✅
-- Day 2: Ingestion & retrieval pipeline ✅
-- Day 3: Answer generation with citations ✅
-- Day 4: Production observability added, including automatic incident logging and health checks across DB, vector store, and LLM provider ✅
+- **Day 1:** Backend & DB setup ✅  
+- **Day 2:** Ingestion & retrieval pipeline ✅  
+- **Day 3:** Answer generation with strict citations ✅  
+- **Day 4:** Production observability (incidents + health checks) ✅  
+- **Day 5:** Real PDF ingestion + Next.js frontend UI/UX ✅  
 
+---
