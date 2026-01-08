@@ -13,6 +13,10 @@ __pycache__/
 # =========================
 backend/data/
 backend/data/**
+backend/data/uploads/
+backend/data/uploads/**
+backend/data/processed/
+backend/data/processed/**
 data/
 data/**
 
