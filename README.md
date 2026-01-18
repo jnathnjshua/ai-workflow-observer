@@ -5,7 +5,9 @@ A lightweight, end-to-end AI document analysis pipeline inspired by modern finan
 This project demonstrates how to ingest, embed, retrieve, and answer questions over structured financial documents with full citation transparency, observability, and a modern UI.
 
 ---
-Watch the demo on [Loom]([(https://www.loom.com/share/fc96c67c0da241dda8457fa6161d421f)])
+
+[![Watch the video](https://cdn.loom.com/sessions/thumbnails/fc96c67c0da241dda8457fa6161d421f-8717407b81bb840a-full-play.gif)](https://www.loom.com/share/fc96c67c0da241dda8457fa6161d421f)
+
 ---
 
 ## Live Demo (Frontend) + Local Backend Setup
