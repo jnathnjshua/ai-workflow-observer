@@ -6,6 +6,10 @@ This project demonstrates how to ingest, embed, retrieve, and answer questions o
 
 ---
 
+Watch the demo on [Loom]([(https://www.loom.com/share/fc96c67c0da241dda8457fa6161d421f)])
+
+---
+
 ## Live Demo (Frontend) + Local Backend Setup
 
 Live site: https://ai-workflow-observer.vercel.app
